@@ -1,0 +1,47 @@
+{% load staticfiles %}
+
+<html>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- optional theme -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> -->
+
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();   
+        });
+
+        $('html').on('click', function(e) {
+            if (typeof $(e.target).data('original-title') == 'undefined') {
+                $('[data-original-title]').popover('hide');
+            }
+        });
+    </script>
+   
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">Flipper App</a>
+            <a href="{% url "index" %}" class="navbar-text navbar-left"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span>&nbsp Inventory</a>
+            <a href="{% url "index" %}" class="navbar-text navbar-left"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Data</a>
+
+
+            <a href="{% url "logout" %}" class="navbar-text navbar-right"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout</a>
+            <a href="{% url "settings" %}" class="navbar-text navbar-right"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Manage</a>
+            <span class="navbar-text navbar-right"><span class="glyphicon glyphicon-user" aria-hidden="true"></span>&nbsp{{ email }}</span>
+        </div>
+    </nav>
+
+    <body>
+        {% block content %}
+        {% endblock %}
+    </body>
+
+</html>

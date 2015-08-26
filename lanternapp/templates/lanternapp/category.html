@@ -1,0 +1,16 @@
+{% extends "lanternapp/base.html" %}
+
+{% block content %}
+
+	<div class="panel panel-default" id="auth_panel">
+		<div class="panel-body">
+    		<form method="POST">{% csrf_token %}
+        		{{ form.as_p }}
+        		<button type="submit">Save Category</button>
+    		</form>
+
+    		<a class="btn btn-xs btn-danger" href="{% url "delete_category" pk=category.pk %}">Delete Category</a>	
+		</div>
+	</div>
+
+{% endblock content %}

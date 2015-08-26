@@ -1,0 +1,41 @@
+{% load staticfiles %}
+
+<html>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+    <!-- optional theme -->
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> -->
+
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            $('[data-toggle="popover"]').popover();   
+        });
+
+        $('html').on('click', function(e) {
+            if (typeof $(e.target).data('original-title') == 'undefined') {
+                $('[data-original-title]').popover('hide');
+            }
+        });
+    </script>
+   
+    <link rel="stylesheet" href="{% static "css/style.css" %}">
+
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url "index" %}">Flipper App</a>
+            <!-- <a href="{% url "register" %}" class="navbar-text navbar-right">Register</a> -->
+        </div>
+    </nav>
+
+    <body>
+        {% block content %}
+        {% endblock %}
+    </body>
+
+</html>

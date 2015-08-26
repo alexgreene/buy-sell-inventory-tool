@@ -1,0 +1,82 @@
+
+body { 
+	padding-top: 70px; 
+	width: 100%;
+	margin: auto;
+}
+
+.main-table .hidden-row {
+    padding: 0 !important;
+}
+
+.main-table .hidden-div {
+	margin: 15px;
+	font-size: 0.85em;
+}
+
+.main-table .title {
+	width: 40%;
+}
+
+.main-table .purchase-price, .main-table .sale-price {
+	width: 20%;
+}
+
+.main-table .net-change {
+	width: 7%;
+}
+
+.main-table .time-to-sale {
+	width: 9%;
+}
+
+.main-table .tiny-date {
+	font-size: .7em;
+}
+
+.lot-table .title {
+	width: 65%;
+}
+
+.lot-table .other-transaction {
+	width: 35%;
+}
+
+.btn-col-width {
+    width: 100%;
+}
+
+.positive {
+	color: green;
+}
+.negative {
+	color: red;
+}
+.breakeven {
+	color: black;
+}
+
+.manage-nav {
+	margin-bottom: 20px;
+}
+
+.save-btn {
+	margin-bottom: 30px;
+}
+
+/* Popover Header */
+.popover-title {
+    font-size: .75em;
+}
+
+/* Popover Body */
+.popover-content {
+	font-size: .75em;
+}
+
+/* dump */
+
+#auth_panel {
+	width: 30em;
+	margin: auto;
+}

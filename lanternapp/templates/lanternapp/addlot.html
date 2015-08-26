@@ -1,0 +1,20 @@
+{% extends "lanternapp/base.html" %}
+
+{% block content %}
+
+	{% if is_purchase %}
+		<h3>Add Purchase Lot</h3>
+	{% else %}
+		<h3>Add Sale Lot</h3>
+	{% endif %}
+
+	<div id='lotForm' class="panel panel-default">
+		<div class="panel-body">
+    		<form method="POST">{% csrf_token %}
+        		{{ form.as_p }}
+        		<button type="submit">Save Lot</button>
+    		</form>
+		</div>
+	</div>
+
+{% endblock content %}

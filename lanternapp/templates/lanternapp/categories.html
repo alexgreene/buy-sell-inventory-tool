@@ -1,0 +1,38 @@
+{% extends "lanternapp/base.html" %}
+
+{% block content %}
+
+	<h1>Manage</h1>
+
+	<ul class="nav nav-tabs nav-justified manage-nav">
+			<li role="presentation"><a href="{% url "settings" %}">Account Settings</a></li>
+			<li role="presentation" class="active"><a href="{% url "categories" %}">Categories</a></li>
+			<li role="presentation"><a href="{% url "payments" %}">Subscription</a></li>
+	</ul>
+
+	<div class='col-md-4 lot-data'>
+
+		<div id='lotForm' class="panel panel-default">
+  			<div class="panel-body">
+	    		<form method="POST">{% csrf_token %}
+	        		{{ form.as_p }}
+	        		<button type="submit" class="btn btn-success btn-col-width add-cat-btn">Add Category</button>
+	    		</form>
+			</div>
+		</div>
+	</div>
+
+	<div class='col-md-8 lot-data'>
+		<div class="panel panel-default">
+			<ul class="list-group">
+				{% for cat in categories %}
+		    		<li class="list-group-item">
+		    			{{ cat.name }}
+		    			<a class="btn btn-xs btn-default" href="{% url "edit_category" pk=cat.pk %}">Edit</a>
+		    		</li>
+			    {% endfor %}
+			</ul>
+		</div>
+	</div>
+
+{% endblock content %}

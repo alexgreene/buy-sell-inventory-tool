@@ -1,0 +1,132 @@
+{% load staticfiles %}
+
+<html>
+	
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+	<!-- optional theme -->
+	<!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css"> -->
+
+	<link rel="stylesheet" href="{% static "css/style.css" %}">
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+	<script>
+		$(document).ready(function(){
+    		$('[data-toggle="popover"]').popover();   
+		});
+
+		$('html').on('click', function(e) {
+  			if (typeof $(e.target).data('original-title') == 'undefined') {
+    			$('[data-original-title]').popover('hide');
+  			}
+		});
+	</script>
+
+	<nav class="navbar navbar-default navbar-fixed-top">
+  		<div class="container">
+  			<a class="navbar-brand" href="#">Flipper App</a>
+  			{% if logged_in %}
+  				<a href="{% url "index" %}" class="navbar-text navbar-left"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span>&nbsp Inventory</a>
+  				<a href="{% url "index" %}" class="navbar-text navbar-left"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Data</a>
+
+
+  				<a href="{% url "logout" %}" class="navbar-text navbar-right"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout</a>
+  				<a href="{% url "settings" %}" class="navbar-text navbar-right"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Manage</a>
+  				<span class="navbar-text navbar-right">Welcome, {{ name }}</span>
+    		{% else %}
+    			<a href="{% url "login" %}" class="navbar-text navbar-right">Login</a>
+    			<a href="{% url "register" %}" class="navbar-text navbar-right">Register</a>
+    		{% endif %}
+  		</div>
+	</nav>
+
+	<body>
+
+		{% if logged_in %}
+			<a class="btn " href="{% url "add" %}" role="button">Add Inventory Item +</a>
+			<a class="btn " href="{% url "add_lot" p='purchase' %}" role="button">Add Purchase Lot +</a>
+			<a class="btn " href="{% url "add_lot" p='sale' %}" role="button">Add Sale Lot +</a>
+
+			<table class="table table-hover table-striped main-table" style="border-collapse:collapse;">
+			<thead>
+				<tr>
+	    			<th>Item</th>
+	    			<th>Purchase</th> 
+	    			<th>TTS</th>
+	    			<th>Sale</th>
+	    			<th>Net</th>
+	  			</tr>
+	  		</thead>
+	  		<tbody>
+				{% for item in all_items %}
+	  				 <tr class="accordion-toggle">
+	    				<td data-toggle="collapse" data-target="#{{item.id}}" class="title">{{ item.title }}</td>
+
+	    				<td class="purchase-price">
+	    					{% if item.purchase_lot %}
+	    						<button type="button" class="btn btn-xs btn-info" data-toggle="popover" data-html="true"
+	    						title="{{ item.purchase_lot }}" data-content=" 
+	    								{{ item.purchase_lot.date }} 
+	    								${{ item.purchase_lot.price }}<br />
+	    								<i>{{ item.purchase_lot.description }}</i><br />
+	    								<a href='{% url "view_lot" pk=item.purchase_lot.pk p='purchase' %}''>#details</a>">
+
+	    							{{ item.purchase_lot }}
+	    						</button>
+	    						<span class="tiny-date" >on {{ item.purchase_lot.date }}</span>
+							{% else %}
+								${{ item.purchase_price }} 
+								<span class="tiny-date" >on {{ item.purchase_date }}</span>
+							{% endif %}
+						</td> 
+
+						<td class="time-to-sale">
+							{{ item.time_to_sale }} days
+						</td>
+
+	    				<td class="sale-price">
+	    					{% if item.sale_lot %}
+	    						<button type="button" class="btn btn-xs btn-warning" data-toggle="popover" data-html="true"
+	    						title="{{ item.sale_lot }}" data-content=" 
+	    								{{ item.sale_lot.date }} 
+	    								${{ item.sale_lot.price }}<br />
+	    								<i>{{ item.sale_lot.description }}</i><br />
+	    								<a href='{% url "view_lot" pk=item.sale_lot.pk p='sale' %}''>#details</a>">
+
+	    							{{ item.sale_lot }}
+	    						</button>
+	    						<span class="tiny-date" >on {{ item.sale_lot.date }}</span>
+	    					{% else %}
+								${{ item.sale_price }} 
+	    						<span class="tiny-date" >on {{ item.sale_date }}</span>
+							{% endif %}
+	    				</td>
+	    				<td class="net-change">
+	    					{% if item.purchase_lot or item.sale_lot %}
+	    						<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+	    					{% else %}
+	    						{{ item.net_change }}
+	    					{% endif %}
+	    				</td>
+
+	  				</tr>
+	  				<tr>
+	  					<td colspan="4" class="hidden-row">
+	  						<div class="hidden-div accordion-body collapse" id="{{item.id}}">
+	  							{{ item.description }}
+	  							<a class="btn btn-xs btn-default" href="{% url "edit" pk=item.pk %}">Edit</a> 
+	  						</div>
+	  					</td>
+
+	  				</tr>
+	  			{% endfor %}
+	  		</tbody>
+			</table>
+				
+		{% endif %}
+
+	</body>
+
+</html>

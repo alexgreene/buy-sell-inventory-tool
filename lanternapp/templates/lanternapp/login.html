@@ -1,0 +1,14 @@
+{% extends "lanternapp/base_less.html" %}
+
+{% block content %}
+
+	<div class="panel panel-default" id="auth_panel">
+		<div class="panel-body">
+			<form method="POST">{% csrf_token %}
+				{{ form.as_p }}
+				<button type="submit">Login</button>
+			</form>
+		</div>
+	</div>
+
+{% endblock content %}

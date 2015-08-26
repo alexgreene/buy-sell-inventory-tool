@@ -1,0 +1,105 @@
+{% extends "lanternapp/base.html" %}
+
+{% block content %}
+
+	<div class='col-md-4 lot-data'>
+
+		<div class="panel panel-default">
+		  <!-- Default panel contents -->
+		  <div class="panel-heading">{{ lot.title }}</div>
+		  <div class="panel-body">
+		    <p>{{ lot.description }}</p>
+		  </div>
+		  
+		  <!-- List group -->
+		  <ul class="list-group">
+
+		    {% if is_purchase %}
+	    		<li class="list-group-item"><span class="badge">{{ value_for_total }}</span>Total Revenue:</li>
+		    	<li class="list-group-item"><span class="badge">{{ lot.price }}</span><strong>Purchased For:</strong></li>
+	    	{% else %}
+	    		<li class="list-group-item"><span class="badge">{{ lot.price }}</span><strong>Sold For:</strong></li>
+		    	<li class="list-group-item"><span class="badge">{{ value_for_total }}</span>Total Cost:</li>
+	    	{% endif %}
+
+	    	<li class="list-group-item"><span class="badge">{{ lot.profit }}</span>Profit:</li>
+		    <li class="list-group-item"><span class="badge">{{ lot.date }}</span>Date:</li>
+		    <li class="list-group-item"><span class="badge">{{ lot.medium }}</span>Source:</li>
+		  </ul>
+		</div>
+
+		<button type="button" data-toggle="collapse" data-target="#lotForm" class="btn btn-default btn-col-width">Edit Lot</button>
+
+		<div id='lotForm' class="panel panel-default collapse">
+  			<div class="panel-body">
+	    		<form method="POST">{% csrf_token %}
+	        		{{ form.as_p }}
+	        		<button type="submit">Save Lot</button>
+	    		</form>
+
+	    		{% if show_delete %}
+	    			{% if is_purchase %}
+	    				<a class="btn btn-xs btn-danger" href="{% url "delete_lot" pk=lot.pk p='purchase' %}">Delete Lot</a>
+	    			{% else %}
+	    				<a class="btn btn-xs btn-danger" href="{% url "delete_lot" pk=lot.pk p='sale' %}">Delete Lot</a>
+	    			{% endif %}
+	    		{% endif %}
+		    		
+			</div>
+		</div>
+	</div>
+
+	<div class='col-md-8'>
+
+		<div class="panel panel-default">
+				<div class="panel-body">
+				{% if is_purchase %}
+	   				<th>After purchasing this lot, you sold its contents as such:</th> 
+	   			{% else %}
+	    			<th>The following items were contained in this lot that you sold:</th>
+	   			{% endif %}
+				</div>
+		</div>
+
+		{% if show_delete %}
+		{% else %}
+			<table class="table table-bordered table-striped lot-table">
+			<thead>
+				<tr>
+	    			<th>Item</th>
+	    			{% if is_purchase %}
+	    				<th>Sale</th> 
+	    			{% else %}
+	    				<th>Purchase</th>
+	    			{% endif %}
+	  			</tr>
+	  		</thead>
+	  		<tbody>
+				{% for item in all_items_in_lot %}
+	  				<tr>
+	    				<td class='title'>{{ item.title }}</td>
+	    				{% if is_purchase %}
+    						{% if item.sale_lot %}
+    							<td><a class="btn btn-xs btn-warning" href='{% url "view_lot" pk=item.sale_lot.pk p='sale' %}' role="button" 
+    								data-toggle="tooltip" data-placement="right" title="{{ item.sale_lot.date }}">{{ item.sale_lot.title }} 
+    									<i>${{ item.sale_lot.price }}</i></a></td>
+							{% else %}
+								<td>{{ item.sale_price }}</td>
+							{% endif %}
+						{% else %}
+							{% if item.purchase_lot %}
+								<td class='other-transaction'><a class="btn btn-xs btn-info" href='{% url "view_lot" pk=item.purchase_lot.pk p='purchase' %}' role="button" 
+									data-toggle="tooltip" data-placement="right" title="{{ item.purchase_lot.date }}">{{ item.purchase_lot.title }} 
+										<i>${{ item.purchase_lot.price }}</i></a></td>
+							{% else %}
+								<td>{{ item.purchase_price }}</td>
+							{% endif %}
+						{% endif %}
+	    			</tr>
+	    		{% endfor %}
+	    	</tbody>
+    	{% endif %}
+    	</table>
+    </div>
+
+{% endblock content %}
