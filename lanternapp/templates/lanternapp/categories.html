@@ -2,8 +2,6 @@
 
 {% block content %}
 
-	<h1>Manage</h1>
-
 	<ul class="nav nav-tabs nav-justified manage-nav">
 			<li role="presentation"><a href="{% url "settings" %}">Account Settings</a></li>
 			<li role="presentation" class="active"><a href="{% url "categories" %}">Categories</a></li>
@@ -28,7 +26,7 @@
 				{% for cat in categories %}
 		    		<li class="list-group-item">
 		    			{{ cat.name }}
-		    			<a class="btn btn-xs btn-default" href="{% url "edit_category" pk=cat.pk %}">Edit</a>
+		    			<a href="{% url "edit" pk=cat.pk %}"><span class="glyphicon glyphicon-pencil to-the-right" aria-hidden="true"></span></a>
 		    		</li>
 			    {% endfor %}
 			</ul>

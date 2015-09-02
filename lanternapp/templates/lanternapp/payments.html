@@ -2,8 +2,6 @@
 
 {% block content %}
 
-	<h1>Manage</h1>
-
 	<ul class="nav nav-tabs nav-justified manage-nav">
 			<li role="presentation"><a href="{% url "settings" %}">Account Settings</a></li>
 			<li role="presentation"><a href="{% url "categories" %}">Categories</a></li>
@@ -12,14 +10,6 @@
 
 	<div class='col-md-4 lot-data'>
 
-		<div class="panel panel-default">
-			<div class="panel-heading">Payment Details</div>
-	  		<ul class="list-group">
-		    	<li class="list-group-item">Payment Info A</li>
-			    <li class="list-group-item">Payment Info B</li>
-			    <li class="list-group-item">Payment Info C</li>
-			</ul>
-		</div>
 	</div>
 
 {% endblock content %}

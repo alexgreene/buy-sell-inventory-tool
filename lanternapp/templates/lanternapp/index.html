@@ -1,5 +1,5 @@
 {% load staticfiles %}
-
+<!DOCTYPE html>
 <html>
 	
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
@@ -22,110 +22,221 @@
     			$('[data-original-title]').popover('hide');
   			}
 		});
+
+		function showItemDetail(data, tts, pln, sln) {
+			console.log(data);
+			var inPurchaseLot = data[0].fields.purchase_lot;
+			var inSaleLot = data[0].fields.sale_lot;
+
+			if (inPurchaseLot) {
+				document.getElementById("detailView-purchase-table").style.display = 'none';
+				document.getElementById("detailView-purchase-lot").style.display = 'block';
+				document.getElementById("detailView-purchase-lot").innerHTML = '<strong>' + pln + '</strong>';
+			} else {
+				document.getElementById("detailView-purchase-table").style.display = 'table';
+				document.getElementById("detailView-purchase-lot").style.display = 'none';
+				document.getElementById("detailView-purchase-price").innerHTML = data[0].fields.purchase_price;
+				document.getElementById("detailView-purchase-medium").innerHTML = data[0].fields.purchase_medium;
+			}
+
+			document.getElementById("detailView-expenses").innerHTML = data[0].fields.additional_expense;
+			document.getElementById("detailView-time-elapsed").innerHTML = tts + ' days later';
+
+			if ( inSaleLot ) {
+				document.getElementById("detailView-sale-table").style.display = 'none';
+				document.getElementById("detailView-sale-lot").style.display = 'block';
+				document.getElementById("detailView-sale-lot").innerHTML = sln;
+			} else {
+				document.getElementById("detailView-sale-table").style.display = 'table';
+				document.getElementById("detailView-sale-lot").style.display = 'none';
+				document.getElementById("detailView-sale-price").innerHTML = data[0].fields.sale_price;
+				document.getElementById("detailView-sale-medium").innerHTML = data[0].fields.sale_medium;
+			}
+
+			document.getElementById("detailView-description").innerHTML = data[0].fields.description;
+		}
+
 	</script>
 
-	<nav class="navbar navbar-default navbar-fixed-top">
-  		<div class="container">
-  			<a class="navbar-brand" href="#">Flipper App</a>
-  			{% if logged_in %}
-  				<a href="{% url "index" %}" class="navbar-text navbar-left"><span class="glyphicon glyphicon-tags" aria-hidden="true"></span>&nbsp Inventory</a>
-  				<a href="{% url "index" %}" class="navbar-text navbar-left"><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Data</a>
+	<header>
+		<div class='header-brand'>
+			<strong><span class='header-brand-title'>{{ title }}</span></strong>
+		</div>
+		<div class='header-main '>
+			<a class="header-main-item-left in-circle" href="{% url "add" %}" role="button"><span class="glyphicon glyphicon-plus" aria-hidden="true"></a>
+			<a class="header-main-item-left in-circle" href="{% url "add_lot" p='purchase' %}" role="button"><span class="glyphicon glyphicon-folder-close" aria-hidden="true"></a>
+			<span class="header-main-item-left">All / Sold / To Sell</span>
+			<span class="header-main-item-right">All Time / Month / Year</span>
 
+			{% if logged_in %}
+				<!-- <a href="{% url "index" %}" class=""><span class="glyphicon glyphicon-tags" aria-hidden="true"></span>&nbsp Inventory</a>
+				<a href="{% url "index" %}" class=""><span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Data</a>
 
-  				<a href="{% url "logout" %}" class="navbar-text navbar-right"><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> Logout</a>
-  				<a href="{% url "settings" %}" class="navbar-text navbar-right"><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Manage</a>
-  				<span class="navbar-text navbar-right">Welcome, {{ name }}</span>
-    		{% else %}
-    			<a href="{% url "login" %}" class="navbar-text navbar-right">Login</a>
-    			<a href="{% url "register" %}" class="navbar-text navbar-right">Register</a>
-    		{% endif %}
-  		</div>
-	</nav>
+				<a href="{% url "logout" %}" class=""><span class="glyphicon glyphicon-log-out" aria-hidden="true"></span> </a>-->
+
+				<!-- <a class="btn " href="{% url "add" %}" role="button">Add Inventory Item +</a>
+				<a class="btn " href="{% url "add_lot" p='purchase' %}" role="button">Add Purchase Lot +</a>
+				<a class="btn " href="{% url "add_lot" p='sale' %}" role="button">Add Sale Lot +</a> -->
+
+				<!-- <span class="">Welcome, {{ name }}</span> -->
+	    	{% else %}
+	    		<a href="{% url "login" %}" class="">Login</a>
+	    		<a href="{% url "register" %}" class="">Register</a>
+	    	{% endif %}
+	    </div>
+
+  	</header>
 
 	<body>
 
-		{% if logged_in %}
-			<a class="btn " href="{% url "add" %}" role="button">Add Inventory Item +</a>
-			<a class="btn " href="{% url "add_lot" p='purchase' %}" role="button">Add Purchase Lot +</a>
-			<a class="btn " href="{% url "add_lot" p='sale' %}" role="button">Add Sale Lot +</a>
-
-			<table class="table table-hover table-striped main-table" style="border-collapse:collapse;">
-			<thead>
-				<tr>
-	    			<th>Item</th>
-	    			<th>Purchase</th> 
-	    			<th>TTS</th>
-	    			<th>Sale</th>
-	    			<th>Net</th>
-	  			</tr>
-	  		</thead>
-	  		<tbody>
-				{% for item in all_items %}
-	  				 <tr class="accordion-toggle">
-	    				<td data-toggle="collapse" data-target="#{{item.id}}" class="title">{{ item.title }}</td>
-
-	    				<td class="purchase-price">
-	    					{% if item.purchase_lot %}
-	    						<button type="button" class="btn btn-xs btn-info" data-toggle="popover" data-html="true"
-	    						title="{{ item.purchase_lot }}" data-content=" 
-	    								{{ item.purchase_lot.date }} 
-	    								${{ item.purchase_lot.price }}<br />
-	    								<i>{{ item.purchase_lot.description }}</i><br />
-	    								<a href='{% url "view_lot" pk=item.purchase_lot.pk p='purchase' %}''>#details</a>">
-
-	    							{{ item.purchase_lot }}
-	    						</button>
-	    						<span class="tiny-date" >on {{ item.purchase_lot.date }}</span>
-							{% else %}
-								${{ item.purchase_price }} 
-								<span class="tiny-date" >on {{ item.purchase_date }}</span>
-							{% endif %}
-						</td> 
-
-						<td class="time-to-sale">
-							{{ item.time_to_sale }} days
-						</td>
-
-	    				<td class="sale-price">
-	    					{% if item.sale_lot %}
-	    						<button type="button" class="btn btn-xs btn-warning" data-toggle="popover" data-html="true"
-	    						title="{{ item.sale_lot }}" data-content=" 
-	    								{{ item.sale_lot.date }} 
-	    								${{ item.sale_lot.price }}<br />
-	    								<i>{{ item.sale_lot.description }}</i><br />
-	    								<a href='{% url "view_lot" pk=item.sale_lot.pk p='sale' %}''>#details</a>">
-
-	    							{{ item.sale_lot }}
-	    						</button>
-	    						<span class="tiny-date" >on {{ item.sale_lot.date }}</span>
-	    					{% else %}
-								${{ item.sale_price }} 
-	    						<span class="tiny-date" >on {{ item.sale_date }}</span>
-							{% endif %}
-	    				</td>
-	    				<td class="net-change">
-	    					{% if item.purchase_lot or item.sale_lot %}
-	    						<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
-	    					{% else %}
-	    						{{ item.net_change }}
-	    					{% endif %}
-	    				</td>
-
-	  				</tr>
-	  				<tr>
-	  					<td colspan="4" class="hidden-row">
-	  						<div class="hidden-div accordion-body collapse" id="{{item.id}}">
-	  							{{ item.description }}
-	  							<a class="btn btn-xs btn-default" href="{% url "edit" pk=item.pk %}">Edit</a> 
-	  						</div>
-	  					</td>
-
-	  				</tr>
-	  			{% endfor %}
-	  		</tbody>
-			</table>
+		<div class='sidebar'>
+			<div class='sidebar-header'> </div>
+			<div class='detailView'>
 				
-		{% endif %}
+				<div class='detailView-purchase'>
+					<table class="table table-striped" id="detailView-purchase-table">
+						<thead>
+							<tr>
+								<td>Purchased for</td>
+								<td class='detailValue' id="detailView-purchase-price"></td>
+							</tr>
+							<tr>
+								<td>Via</td>
+								<td class='detailValue' id="detailView-purchase-medium"></td>
+							</tr>
+							<tr>
+								<td>Invested</td>
+								<td class='detailValue' id="detailView-expenses"></td>
+							</tr>
+						</thead>
+					</table>
+				
+					<div id='detailView-purchase-lot' class='detail-lot-badge' ></div>
+				</div>
+
+				<div class='detailView-sale'>
+					<div class='triangle-down'></div>
+					<div class='time-elapsed' id="detailView-time-elapsed"><i></i></div>
+					<table class="table table-striped" id="detailView-sale-table">
+						<thead>
+							<tr>
+								<td>Sold for</td>
+								<td class='detailValue' id="detailView-sale-price"></td>
+							</tr>
+							<tr>
+								<td>Via</td>
+								<td class='detailValue' id="detailView-sale-medium"></td>
+							</tr>
+							<tr>
+								<td>Shipping cost</td>
+								<td class='detailValue' id="detailView-shipping"></td>
+							</tr>
+							<tr>
+								<td>Fees</td>
+								<td class='detailValue' id="detailView-fees"></td>
+							</tr>
+							<tr>
+								<td>Net</td>
+								<td class='detailValue' id="detailView-net"><strong></strong></td>
+							</tr>
+						</thead>
+					</table>
+					<div id='detailView-sale-lot' class='detail-lot-badge'></div>
+				</div>
+
+
+				<h6>Description</h6>
+				<p id="detailView-description"></p>
+				
+			</div>
+			<div class='sidebar-edit-btn'>Edit Item</div>
+		</div>
+		<div class='sidebar-footer'>
+			<a href="{% url "settings" %}" class=""><span class="glyphicon glyphicon-cog" aria-hidden="true"></span> Settings</a> 
+		</div>
+
+		<div class='table-section'>
+
+			{% if logged_in %}
+
+				<table class="table table-hover table-striped main-table">
+				<thead>
+					<tr>
+						<th></th>
+		    			<th>Item</th>
+		    			<th>Purchase</th> 
+		    			<th>TTS</th>
+		    			<th>Sale</th>
+		    			<th>Net</th>
+		    			<th></th>
+		  			</tr>
+		  		</thead>
+		  		<tbody>
+					{% for item in all_items %}
+		  				 <tr onClick="showItemDetail( JSON.parse('{{ item.serialized_json|escapejs }}'), {{ item.time_to_sale }}, '{{ item.purchase_lot }}', '{{ item.sale_lot }}' )">
+		  				 	<td class="category-marker"></td>
+
+		    				<td class="title">{{ item.title }}</td>
+
+		    				<td class="purchase-price">
+		    					{% if item.purchase_lot %}
+		    						<button type="button" class="btn btn-xs btn-info" data-toggle="popover" data-html="true"
+		    						title="{{ item.purchase_lot }}" data-content=" 
+		    								{{ item.purchase_lot.date }} 
+		    								${{ item.purchase_lot.price }}<br />
+		    								<i>{{ item.purchase_lot.description }}</i><br />
+		    								<a href='{% url "view_lot" pk=item.purchase_lot.pk p='purchase' %}''>#details</a>">
+
+		    							{{ item.purchase_lot }}
+		    						</button>
+		    						<span class="tiny-date" >on {{ item.purchase_lot.date }}</span>
+								{% else %}
+									${{ item.purchase_price }} 
+									<span class="tiny-date" >on {{ item.purchase_date }}</span>
+								{% endif %}
+							</td> 
+
+							<td class="time-to-sale">
+								{{ item.time_to_sale }}
+								<span class="glyphicon glyphicon-arrow-right" aria-hidden="true"></span>
+							</td>
+
+		    				<td class="sale-price">
+		    					{% if item.sale_lot %}
+		    						<button type="button" class="btn btn-xs btn-warning" data-toggle="popover" data-html="true"
+		    						title="{{ item.sale_lot }}" data-content=" 
+		    								{{ item.sale_lot.date }} 
+		    								${{ item.sale_lot.price }}<br />
+		    								<i>{{ item.sale_lot.description }}</i><br />
+		    								<a href='{% url "view_lot" pk=item.sale_lot.pk p='sale' %}''>#details</a>">
+
+		    							{{ item.sale_lot }}
+		    						</button>
+		    						<span class="tiny-date" >on {{ item.sale_lot.date }}</span>
+		    					{% else %}
+									${{ item.sale_price }} 
+		    						<span class="tiny-date" >on {{ item.sale_date }}</span>
+								{% endif %}
+		    				</td>
+		    				<td class="net-change">
+		    					{% if item.purchase_lot or item.sale_lot %}
+		    						<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+		    					{% else %}
+		    						{{ item.net_change }}
+		    					{% endif %}
+		    				</td>
+
+		    				<td class="edit">
+		    					<a href="{% url "edit" pk=item.pk %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></span></a>
+		    				</td>
+
+		  				</tr>
+		  			{% endfor %}
+		  		</tbody>
+				</table>
+					
+			{% endif %}
+		</div>
 
 	</body>
 

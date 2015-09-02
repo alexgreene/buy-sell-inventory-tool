@@ -1,17 +1,162 @@
 
+@import url(https://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic);
+
+* {
+	font-family: 'Noto Sans', sans-serif;
+}
+
 body { 
-	padding-top: 70px; 
+}
+
+header {
 	width: 100%;
+	background-color: black;
+	height: 60px;
+	position: fixed;
+}
+
+.header-brand {
+	width: 20%;
+	height: 100%;
+	float: left;
+	background-color: #C24B39;
+	color: white;
+	text-align: center;
+	padding: 7px;
+}
+
+.header-brand-title {
+	line-height: 40px;
+	font-size: 1.5em;
+}
+
+.header-main {
+	width: 80%;
+	height: 100%;
+	float: right;
+	background-color: #C85D4D;
+}
+
+.header-main-item-left {
+	font-size: 1.15em;
+	float: left;
+	margin-left: 15px;
+	margin-top: 17px;
+}
+
+.header-main-item-right {
+	font-size: 1.15em;
+	float: right;
+	margin-right: 15px;
+	margin-top: 17px;
+}
+
+.in-circle {
+	width: 40px; 
+ 	height: 40px; 
+ 	background-color: #F3E9D2;
+ 	-moz-border-radius: 20px;
+	-webkit-border-radius: 20px;
+	border-radius: 20px;
+	text-align: center;
+	margin-top: 10px;
+	padding-top: 9px;
+}
+
+.sidebar {
+	height: 90%;
+	background-color: #F3E9D2;
+	position: fixed;
+	margin-top: 60px;
+	width: 20%;
+}
+
+.sidebar-header {
+	background-color: #DBD2BD;
+	height: 36px;
+	line-height: 36px;
+	text-align: center;
+	width: 100%;
+}
+
+.detailView {
+	width: 100%;
+	padding:20px;
+	height: 85%;
+}
+
+.detailView-purchase {
+	height: 125px;
+}
+
+.detailView-sale {
+}
+
+.detailView .detailValue {
+	text-align: right;
+}
+
+.detail-lot-badge {
+	text-align: center;
+	font-size: 1.25em;
+	padding-top: 25px;
+}
+
+.triangle-down {
+	width: 0;
+	height: 0;
+	border-left: 15px solid transparent;
+	border-right: 15px solid transparent;
+	border-top: 30px solid rgb(41,101,168);
 	margin: auto;
+	margin-top: 20px;
+	margin-bottom: 20px;
 }
 
-.main-table .hidden-row {
-    padding: 0 !important;
+.time-elapsed {
+	text-align: center;
 }
 
-.main-table .hidden-div {
-	margin: 15px;
-	font-size: 0.85em;
+.sidebar-edit-btn {
+	width: 90%; 
+	margin: auto;
+ 	height: 40px; 
+ 	background-color: #DBD2BD;
+ 	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	text-align: center;
+	margin-top: 10px;
+	padding-top: 9px;
+}
+
+.sidebar-footer {
+	background-color: #DBD2BD;
+	position: fixed;
+	height: 36px;
+	line-height: 36px;
+	text-align: center;
+	width: 20%;
+	bottom: 0;
+}
+
+.sidebar-footer a {
+	text-decoration: none;
+}
+
+.table-section {
+	width: 80%;
+	margin-left: 20vw;
+	padding-top: 60px;
+}
+
+.main-table {
+	font-size: .9em;
+	padding-top: 100px;
+}
+
+.main-table .category-marker {
+	width: 3%;
 }
 
 .main-table .title {
@@ -27,11 +172,15 @@ body {
 }
 
 .main-table .time-to-sale {
-	width: 9%;
+	width: 8%;
+}
+
+.main-table .edit {
+	width: 5%;
 }
 
 .main-table .tiny-date {
-	font-size: .7em;
+	font-size: .80em;
 }
 
 .lot-table .title {
@@ -56,13 +205,39 @@ body {
 	color: black;
 }
 
+.navbar {
+	margin-bottom: 0px;
+}
+
 .manage-nav {
-	margin-bottom: 20px;
 }
 
 .save-btn {
 	margin-bottom: 30px;
 }
+
+.to-the-right {
+	float: right;
+}
+
+.btn-circle { 
+ 	width: 30px; 
+ 	height: 30px; 
+ 	text-align: center;
+ 	padding: 6px 0;
+ 	font-size: 12px;
+ 	line-height: 1.428571429;
+ 	border-radius: 15px;
+ }
+
+.btn-circle.btn-lg {
+ 	width: 50px;
+ 	height: 50px;
+ 	padding: 10px 16px;
+ 	font-size: 18px;
+ 	line-height:1.33;
+ 	border-radius: 25px;
+ }
 
 /* Popover Header */
 .popover-title {

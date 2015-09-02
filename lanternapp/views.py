@@ -6,6 +6,8 @@ from django.template import RequestContext
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 
+from django.core import serializers
+
 from django.shortcuts import get_object_or_404
 
 from .models import Flipper, InventoryItem, SaleLot, PurchaseLot, Theme, Category
@@ -14,6 +16,7 @@ from .forms import RegisterForm, LoginForm, ItemForm, PurchaseLotForm, SaleLotFo
 
 import crypt
 import random
+import json
 
 def index(request):
 	# Handle user account
@@ -21,10 +24,11 @@ def index(request):
 		logged_in = False
 		email = False
 		all_items = False
+		title = 'not'
 	else:
 		logged_in = True
 		s = Flipper.objects.get(id=request.session['flipper_id'])
-		name = s.first_name
+		title = s.app_title
 
 	# GET ALL THE DATAS!!!!
 		all_items = InventoryItem.objects.all()
@@ -43,7 +47,9 @@ def index(request):
 
 			item.time_to_sale = (date_s - date_p).days
 
-	return render(request, 'lanternapp/index.html', { 'logged_in': logged_in, 'name': name, 'all_items': all_items })
+			item.serialized_json = serializers.serialize("json", [item])
+
+	return render(request, 'lanternapp/index.html', { 'logged_in': logged_in, 'title': title, 'all_items': all_items })
 
 def add(request):
 	s = Flipper.objects.get(id=request.session['flipper_id'])
